@@ -1,0 +1,11 @@
+$ python
+>>> import EmotionDetection
+>>> print(EmotionDetection)
+<module 'EmotionDetection' from '.../EmotionDetection/__init__.py'>
+>>> from EmotionDetection import emotion_detector
+>>> print(callable(emotion_detector))
+True
+>>> print("EmotionDetection is a valid package.")
+EmotionDetection is a valid package.
+>>> exit()
+$ 
