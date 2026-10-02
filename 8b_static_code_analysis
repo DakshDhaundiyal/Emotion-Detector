@@ -1,0 +1,6 @@
+$ pylint server.py EmotionDetection/emotion_detection.py
+
+-------------------------------------------------------------------
+Your code has been rated at 10.00/10
+
+$ 
