@@ -1,0 +1,29 @@
+from flask import Flask, render_template, request
+from EmotionDetection.emotion_detection import emotion_detector
+
+app = Flask(__name__)
+
+
+@app.route("/", methods=["GET", "POST"])
+def index():
+    result = None
+    error = None
+    text = ""
+
+    if request.method == "POST":
+        text = request.form.get("text", "")
+        if not text.strip():
+            error = "Please enter some text to analyze."
+        else:
+            try:
+                result = emotion_detector(text)
+                if result["dominant_emotion"] is None:
+                    error = "Unable to analyze the supplied text."
+            except Exception as exc:  # Keep UI errors user-friendly.
+                error = f"Unable to process the request: {exc}"
+
+    return render_template("index.html", result=result, error=error, text=text)
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000, debug=False)
