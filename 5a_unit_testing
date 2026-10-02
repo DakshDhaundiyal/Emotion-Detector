@@ -1,0 +1,35 @@
+import unittest
+from unittest.mock import Mock, patch
+from EmotionDetection.emotion_detection import emotion_detector
+
+class TestEmotionDetector(unittest.TestCase):
+    @patch("EmotionDetection.emotion_detection.requests.post")
+    def test_joy(self, mock_post):
+        mock_post.return_value = Mock(status_code=200, json=lambda: {"emotionPredictions": [{"emotion": {"anger": 0.01, "disgust": 0.01, "fear": 0.02, "joy": 0.94, "sadness": 0.02}}]})
+        self.assertEqual(emotion_detector("happy")["dominant_emotion"], "joy")
+
+    @patch("EmotionDetection.emotion_detection.requests.post")
+    def test_anger(self, mock_post):
+        mock_post.return_value = Mock(status_code=200, json=lambda: {"emotionPredictions": [{"emotion": {"anger": 0.90, "disgust": 0.02, "fear": 0.02, "joy": 0.03, "sadness": 0.03}}]})
+        self.assertEqual(emotion_detector("angry")["dominant_emotion"], "anger")
+
+    @patch("EmotionDetection.emotion_detection.requests.post")
+    def test_sadness(self, mock_post):
+        mock_post.return_value = Mock(status_code=200, json=lambda: {"emotionPredictions": [{"emotion": {"anger": 0.02, "disgust": 0.02, "fear": 0.02, "joy": 0.04, "sadness": 0.90}}]})
+        self.assertEqual(emotion_detector("sad")["dominant_emotion"], "sadness")
+
+    @patch("EmotionDetection.emotion_detection.requests.post")
+    def test_fear(self, mock_post):
+        mock_post.return_value = Mock(status_code=200, json=lambda: {"emotionPredictions": [{"emotion": {"anger": 0.02, "disgust": 0.02, "fear": 0.90, "joy": 0.03, "sadness": 0.03}}]})
+        self.assertEqual(emotion_detector("afraid")["dominant_emotion"], "fear")
+
+    @patch("EmotionDetection.emotion_detection.requests.post")
+    def test_disgust(self, mock_post):
+        mock_post.return_value = Mock(status_code=200, json=lambda: {"emotionPredictions": [{"emotion": {"anger": 0.02, "disgust": 0.90, "fear": 0.02, "joy": 0.03, "sadness": 0.03}}]})
+        self.assertEqual(emotion_detector("disgusting")["dominant_emotion"], "disgust")
+
+    def test_blank_input(self):
+        self.assertIsNone(emotion_detector("")["dominant_emotion"])
+
+if __name__ == "__main__":
+    unittest.main()
